@@ -48,7 +48,7 @@ void initLCD()
  * @param text : message send to LCD
  * @param rowCursor : number of row to show message
  */
-void showLCD(String textLCD, int rowCursor = 0)
+void showLCD(String textLCD, int rowCursor = 0, boolean LCDClear = false)
 {
   if(rowCursor >= 0) 
   {
@@ -60,8 +60,12 @@ void showLCD(String textLCD, int rowCursor = 0)
   {
     textLCD = "Error";
   }
+
+  if(LCDClear) 
+  {
+    lcd.clear(); //Clear print in LCD  
+  }
   
-  lcd.clear(); //Clear print in LCD
   lcd.print(textLCD);
 }
 
@@ -96,6 +100,7 @@ void setup()
 
 void loop()
 {
+  showLCD("TEMPERATURE: ");
   showLCD(getTextCurrentCelsius(), 1);
   delay(1000);
 }
