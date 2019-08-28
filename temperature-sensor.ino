@@ -24,9 +24,15 @@
  */
 LiquidCrystal_I2C lcd(0x27,20,4);
 
+const int pinMAXSCK = 5; //pin MAX6675 SCK to DITITAL pin 5 arduino
+const int pinMAXCS  = 6: //pin MAX6675 SC to DITITAL pin 6 arduino
+const int pinMAXSO  = 7: //pin MAX6675 SO to DITITAL pin 7 arduino
+MAX6675 therm(pinMAXSCK, pinMAXCS, pinMAXSO); //Init MAX6675 component to arduino
+
 void setup()
 {
-  InitLCD(); //initialize options
+  initLCD(); //initialize options
+  showLCD("TEMPERATURE ");
 }
 
 /**
@@ -36,7 +42,7 @@ void setup()
  * - I2C pin SDA should to A4 ANALOG IN Arduino
  * - I2C pin SCL should be to A5 ANALOG IN Adrduino
  */
-void InitLCD()
+void initLCD()
 {
   lcd.init(); //init liquidCrystal Module
   lcd.backlight(); //on the backlight of Display
@@ -45,9 +51,16 @@ void InitLCD()
 /**
  * Show in Display LCD the message send.
  * @param text : message send to LCD
+ * @param rowCursor : number of row to show message
  */
-void showLCD(String textLCD)
+void showLCD(String textLCD, int rowCursor = 0)
 {
+  if(rowCursor >= 0) 
+  {
+    lcd.setCursor(0, rowCursor);  
+  }
+  
+  
   if(textLCD == null || textLCD == "") 
   {
     textLCD = "Error";
@@ -55,4 +68,29 @@ void showLCD(String textLCD)
   
   lcd.clear(); //Clear print in LCD
   lcd.print(textLCD);
+}
+
+
+float getCelsius()
+{
+  float currentCelsius = therm.readCelsius();
+  
+  if(!currentCelsius) 
+  {
+    return 0;
+  }
+
+  return currentCelsius;
+}
+
+String getTextCurrentCelsius()
+{
+  float currentCelsius = getCelsius();
+  String textCelsius = currentCelsius + " C";
+}
+
+void loop()
+{
+  showLCD(getTextCurrentCelsius, 1);
+  delay(1000);
 }
