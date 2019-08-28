@@ -25,15 +25,10 @@
 LiquidCrystal_I2C lcd(0x27,20,4);
 
 const int pinMAXSCK = 5; //pin MAX6675 SCK to DITITAL pin 5 arduino
-const int pinMAXCS  = 6: //pin MAX6675 SC to DITITAL pin 6 arduino
-const int pinMAXSO  = 7: //pin MAX6675 SO to DITITAL pin 7 arduino
+const int pinMAXCS  = 6; //pin MAX6675 SC to DITITAL pin 6 arduino
+const int pinMAXSO  = 7; //pin MAX6675 SO to DITITAL pin 7 arduino
 MAX6675 therm(pinMAXSCK, pinMAXCS, pinMAXSO); //Init MAX6675 component to arduino
 
-void setup()
-{
-  initLCD(); //initialize options
-  showLCD("TEMPERATURE ");
-}
 
 /**
  * Display and I2C specification
@@ -61,7 +56,7 @@ void showLCD(String textLCD, int rowCursor = 0)
   }
   
   
-  if(textLCD == null || textLCD == "") 
+  if(textLCD == "") 
   {
     textLCD = "Error";
   }
@@ -86,11 +81,21 @@ float getCelsius()
 String getTextCurrentCelsius()
 {
   float currentCelsius = getCelsius();
-  String textCelsius = currentCelsius + " C";
+  String textCelsius = String(currentCelsius, 2);
+  textCelsius += F(" C");
+
+  return textCelsius;
+}
+
+
+void setup()
+{
+  initLCD(); //initialize options
+  showLCD("TEMPERATURE ");
 }
 
 void loop()
 {
-  showLCD(getTextCurrentCelsius, 1);
+  showLCD(getTextCurrentCelsius(), 1);
   delay(1000);
 }
